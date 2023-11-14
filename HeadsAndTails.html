@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Heads&Tails</title>
+
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+      body {
+        width: 100%;
+        margin: 0;
+        background-color: #ff6666; /* Red background */
+        text-align: center;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      h1 {
+        color: #fff; /* White text */
+      }
+      button {
+        background-color: #ffd700; /* Yellow buttons */
+        color: #333;
+        font-size: 16px;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      #restart {
+        background-color: #333;
+        color: #fff;
+      }
+      #restart:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+      }
+      .lastResult {
+        color: black;
+        padding: 10px;
+        font-size: 18px;
+        margin-top: 20px;
+        border-radius: 8px;
+        background-color: #fff; /* White background */
+        display: inline-block;
+      }
+      .scoreLabel {
+        color: #fff;
+        font-size: 18px;
+      }
+      .score {
+        color: #ffd700;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .button-container {
+        display: flex;
+        justify-content: center;
+      }
+      .button-container button {
+        margin: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Lets see who wins? I say opposite of whatever you say! We have 10 rounds!</h1>
+
+    <div class="button-container">
+      <button id="Heads" value="Heads">Heads</button>
+      <button id="Tails" value="Tails">Tails</button>
+    </div>
+
+    <div class="scoreLabel">Player Score</div>
+    <div class="score playerScore">0</div>
+
+    <div class="scoreLabel">Pc Score</div>
+    <div class="score pcScore">0</div>
+
+    <div class="lastResult"></div>
+    <button id="restart" value="restart" disabled>Restart</button>
+
+    <script>
+      let result;
+      function throwCoin() {
+        let randomNumber = Math.floor(Math.random() * 10);
+        result = randomNumber % 2 === 0 ? 'Heads' : 'Tails';
+      }
+
+      let count = 1;
+      let playerScore = 0;
+      let pcScore = 0;
+
+      const headsButton = document.querySelector('#Heads');
+      const tailsButton = document.querySelector('#Tails');
+      const restart = document.querySelector('#restart');
+      const lastResult = document.querySelector('.lastResult');
+      const playerScoreField = document.querySelector('.playerScore')
+      const pcScoreField = document.querySelector('.pcScore')
+
+
+      headsButton.addEventListener("click", showResults);
+      tailsButton.addEventListener("click", showResults);
+      restart.addEventListener("click", restartGame);
+
+      function showResults() {
+        throwCoin();
+
+        if (count <= 10) {
+          if ((this.id === 'Heads' && result === 'Heads') || (this.id === 'Tails' && result === 'Tails')) {
+            lastResult.innerHTML += "<br><span style='color: #4CAF50;'>Correct! You won</span>";
+            playerScore += 1;
+          } else {
+            lastResult.innerHTML += "<br><span style='color: #FF0000;'>You lost, loser</span>";
+            pcScore += 1;
+          }
+
+          pcScoreField.innerText = String(pcScore);
+          playerScoreField.innerText = String(playerScore);
+          count += 1;
+        } else {
+          if (playerScore > pcScore) {
+            alert("Congrats you won. Press restart to play again!");
+          } else if (pcScore > playerScore) {
+            alert("You lost, go cry! Press restart to play again!");
+          } else {
+            alert("It's a draw, let's try again. We need a winner. Press restart to play again!");
+          }
+          gameOver();
+        }
+      }
+
+      function restartGame() {
+        playerScore = 0;
+        pcScore = 0;
+        count = 1 ;
+
+        pcScoreField.innerText = String(pcScore);
+        playerScoreField.innerText = String(playerScore);
+        lastResult.innerHTML = "";
+        headsButton.disabled = false;
+        tailsButton.disabled = false;
+      }
+
+      function gameOver() {
+        headsButton.disabled = true;
+        tailsButton.disabled = true;
+        restart.disabled = false;
+      }
+    </script>
+  </body>
+</html>
